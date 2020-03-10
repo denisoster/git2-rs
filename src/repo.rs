@@ -26,6 +26,8 @@ use crate::{Describe, IntoCString, Reflog, RepositoryInitMode, RevparseMode};
 use crate::{DescribeOptions, Diff, DiffOptions, Odb, PackBuilder, TreeBuilder};
 use crate::{Note, Notes, ObjectType, Revwalk, Status, StatusOptions, Statuses, Tag};
 use crate::{Rebase, RebaseOptions};
+use crate::worktree::Worktree;
+use crate::worktree::WorktreeAddOptions;
 
 /// An owned git repository, representing all state associated with the
 /// underlying filesystem.
@@ -2558,6 +2560,18 @@ impl Repository {
                 refname
             ));
             Ok(buf)
+        }
+    }
+
+    /// List all worktree for a given repository
+    pub fn worktree_list(&self) -> Result<StringArray, Error> {
+        let mut arr = raw::git_strarray {
+            strings: 0 as *mut *mut c_char,
+            count: 0,
+        };
+        unsafe {
+            try_call!(raw::git_worktree_list(&mut arr, self.raw));
+            Ok(Binding::from_raw(arr))
         }
     }
 }
