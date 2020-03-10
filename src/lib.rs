@@ -662,6 +662,7 @@ mod tag;
 mod time;
 mod tree;
 mod treebuilder;
+mod worktree;
 
 fn init() {
     static INIT: Once = Once::new();
